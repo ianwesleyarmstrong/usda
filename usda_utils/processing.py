@@ -5,15 +5,16 @@ from typing import Callable, List, Union
 from subprocess import Popen, PIPE, TimeoutExpired
 
 
-def popen(command: str, args: list) -> int:
+def popen(args: list) -> int:
     # insert command at beginning of list
     # not good for time complexity, but makes for more readable code
     #list(args).insert(0, command)
-    runnable_command = ['cmd' + command + args]
+    
 
-    with Popen(runnable_command, stdout=PIPE, stderr=PIPE, text=True) as proc:
+    with Popen(args, stdout=PIPE, stderr=PIPE, text=True) as proc:
         try:
             output, error = proc.communicate()
+            trimmed_output, trimmed_error = output.strip(), error.strip()
         except TimeoutExpired:
             logging.debug('Process timed out')
             raise
@@ -21,10 +22,11 @@ def popen(command: str, args: list) -> int:
             if proc.poll() is None:
                 proc.kill()
                 output, error = proc.communicate()
-        if output != []:
-            print('output: ' + ''.join(output.strip()))
-        if error != []:
-            print(f"error: " + ''.join(error.strip()))
+                trimmed_output, trimmed_error = output.strip(), error.strip()
+        if trimmed_output != []:
+            logging.debug('output: ' + ''.join(trimmed_output))
+        if trimmed_error != [] and len(trimmed_error) != 0:
+            logging.debug(f"error: " + ''.join(trimmed_error))
 
         logging.debug(f'Function returned with code {proc.returncode}')
         return proc.returncode
