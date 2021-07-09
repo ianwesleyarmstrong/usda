@@ -4,6 +4,8 @@ import multiprocessing
 from typing import Callable, List, Union
 from subprocess import Popen, PIPE, TimeoutExpired
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 def popen(args: list) -> int:
     # insert command at beginning of list
@@ -24,17 +26,17 @@ def popen(args: list) -> int:
                 output, error = proc.communicate()
                 trimmed_output, trimmed_error = output.strip(), error.strip()
         if trimmed_output != []:
-            logging.debug('output: ' + ''.join(trimmed_output))
+            logging.debug('Output: ' + ''.join(trimmed_output))
         if trimmed_error != [] and len(trimmed_error) != 0:
-            logging.debug(f"error: " + ''.join(trimmed_error))
-
-        logging.debug(f'Function returned with code {proc.returncode}')
+            logging.debug(f"Error: " + ''.join(trimmed_error))
+        arg_string = ' '.join(args)
+        logging.debug(f'[{arg_string}] returned with code {proc.returncode}')
         return proc.returncode
 
 def distribute_work(worker_function: Callable, command_args: List[str]) -> List[int]:
     pool = multiprocessing.Pool()
-    logging.debug(f'Calling {worker_function.__name__} with {len(command_args)} arguments')
-    ret_values = pool.map(worker_function, command_args)
+    logging.debug(f'distributing function {worker_function.__name__} over {len(command_args)} arguments')
+    ret_values = pool.starmap(worker_function, command_args)
     pool.close()
     pool.join()
     logging.debug(f'Pool has terminated with {len(ret_values)} return values')

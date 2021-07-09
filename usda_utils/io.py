@@ -3,6 +3,8 @@ import logging
 from os.path import join
 from typing import List, Tuple
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 def gather_extensions(data_dir: str, extensions: Tuple(str)) -> List[str]:
     # support for compressor or uncompressed .fq files
