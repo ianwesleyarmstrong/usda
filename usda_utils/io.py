@@ -1,7 +1,7 @@
-import glob
+from glob import glob
 import logging
 from os.path import join
-from typing import List, Tuple, Union
+from typing import List
 
 logging.basicConfig(level=logging.DEBUG)
 
