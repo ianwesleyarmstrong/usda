@@ -11,6 +11,8 @@ def gather_extensions(data_dir: str, extensions: str) -> List[str]:
     # https://stackoverflow.com/questions/4568580/python-glob-multiple-filetypes
     filenames = []
     for ext in extensions:
-        filenames.extend(glob(join(data_dir, ext)))
+        data_dir_name = join(data_dir, ext)
+        logging.debug(data_dir_name)
+        filenames.extend(glob(data_dir_name))
     logging.debug(f'Found {len(filenames)} files with extension(s) {extensions}')
     return filenames
