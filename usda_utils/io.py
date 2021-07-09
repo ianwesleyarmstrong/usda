@@ -6,7 +6,7 @@ from typing import List, Tuple, Union
 logging.basicConfig(level=logging.DEBUG)
 
 
-def gather_extensions(data_dir: str, extensions: Union[str, tuple(str)]) -> List[str]:
+def gather_extensions(data_dir: str, extensions: str) -> List[str]:
     # support for compressor or uncompressed .fq files
     # https://stackoverflow.com/questions/4568580/python-glob-multiple-filetypes
     filenames = []
